@@ -145,16 +145,16 @@ median(stepsPerDayImputedDf$steps) - median(stepsPerDayDf$steps)
 ## [1] 371.1887
 ```
 ## Are there differences in activity patterns between weekdays and weekends?
-There are a larger number of steps in smaller intervals on weekdays and a larger number of steps in larger intervals on weekends, suggesting more activity takes place in the morning on weekdays and in the afternoon on weekends.
+There are a smaller average number of steps on the weekends.
 
 ```r
 isWeekend = weekdays(activityDfWithAverage$date) %in% c("Saturday", "Sunday")
 activityDfWithAverage$dayType = "Weekday"
 activityDfWithAverage[isWeekend,4] = "Weekend"
 activityDfWithAverage$dayType = as.factor(activityDfWithAverage$dayType)
-
-g = ggplot(activityDfWithAverage, aes(interval, steps))
-g + geom_point() + geom_line() + facet_grid(. ~ dayType)
+activityDfAvgInterval = aggregate(steps ~ interval + dayType, data=activityDfWithAverage, mean)
+g = ggplot(activityDfAvgInterval, aes(interval, steps, group=dayType))
+g + geom_line() + facet_grid(dayType ~ .)
 ```
 
 ![](PA1_template_files/figure-html/unnamed-chunk-9-1.png)<!-- -->
